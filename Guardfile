@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A sample Guardfile
 # More info at https://github.com/guard/guard#readme
 
@@ -31,7 +33,8 @@ end
 # daemon: false                        # runs the server as a daemon.
 # debugger: false                      # enable ruby-debug gem.
 # environment: 'development'           # changes server environment.
-# force_run: false                     # kills any process that's holding the listen port before attempting to (re)start Rails.
+# force_run: false                     # kills any process that's holding the
+#                                      # listen port before attempting to (re)start Rails.
 # pid_file: 'tmp/pids/[RAILS_ENV].pid' # specify your pid_file.
 # host: 'localhost'                    # server hostname.
 # port: 3000                           # server port number.
@@ -57,8 +60,8 @@ end
 #  * zeus: 'zeus rspec' (requires the server to be started separately)
 #  * 'just' rspec: 'rspec'
 
-guard :rspec, cmd: "bin/rspec" do
-  require "guard/rspec/dsl"
+guard :rspec, cmd: 'bin/rspec' do
+  require 'guard/rspec/dsl'
   dsl = Guard::RSpec::Dsl.new(self)
 
   # Feel free to open issues for suggestions and improvements
@@ -74,7 +77,7 @@ guard :rspec, cmd: "bin/rspec" do
   dsl.watch_spec_files_for(ruby.lib_files)
 
   # Rails files
-  rails = dsl.rails(view_extensions: %w(erb haml slim))
+  rails = dsl.rails(view_extensions: %w[erb haml slim])
   dsl.watch_spec_files_for(rails.app_files)
   dsl.watch_spec_files_for(rails.views)
 
@@ -91,18 +94,20 @@ guard :rspec, cmd: "bin/rspec" do
   watch(rails.routes)          { "#{rspec.spec_dir}/routing" }
   watch(rails.app_controller)  { "#{rspec.spec_dir}/controllers" }
 
-  # Capybara features specs
-  watch(rails.view_dirs)     { |m| rspec.spec.call("features/#{m[1]}") }
-  watch(rails.layouts)       { |m| rspec.spec.call("features/#{m[1]}") }
+  # # Capybara features specs
+  # watch(rails.view_dirs)     { |m| rspec.spec.call("features/#{m[1]}") }
+  # watch(rails.layouts)       { |m| rspec.spec.call("features/#{m[1]}") }
 
-  # Turnip features and steps
-  watch(%r{^spec/acceptance/(.+)\.feature$})
-  watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$}) do |m|
-    Dir[File.join("**/#{m[1]}.feature")][0] || "spec/acceptance"
-  end
+  # # Turnip features and steps
+  # watch(%r{^spec/acceptance/(.+)\.feature$})
+  # watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$}) do |m|
+  #   Dir[File.join("**/#{m[1]}.feature")][0] || 'spec/acceptance'
+  # end
 end
 
-guard :rubocop do
-  watch(%r{.+\.rb$})
+guard :rubocop,
+      all_on_start: true,
+      cli: '-f fuubar -a' do
+  watch(/.+\.rb$/)
   watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
 end
