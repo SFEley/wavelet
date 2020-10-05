@@ -111,3 +111,7 @@ guard :rubocop,
   watch(/.+\.rb$/)
   watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
 end
+
+guard :yarn do
+  watch('package.json')
+end
